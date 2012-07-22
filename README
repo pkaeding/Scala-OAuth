@@ -14,6 +14,17 @@ Thanks for taking a look and I hope you find it useful.
 Authors:
 Justin Michalicek
 
+To Build:
+
+Run `./sbt package` to build a jar artifact.  You will also need to add the 
+following dependencies to your project:
+
+    libraryDependencies ++= Seq(
+      "commons-codec" % "commons-codec" % "1.6",
+      "org.apache.httpcomponents" % "httpclient" % "4.2.1",
+      "org.apache.httpcomponents" % "httpcore" % "4.2.1"
+    )
+
 Usage Example:
 
 import jm.oauth.OAuth
