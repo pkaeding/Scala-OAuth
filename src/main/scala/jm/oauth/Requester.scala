@@ -9,9 +9,7 @@ import org.apache.http.HttpResponse
 import org.apache.http.HttpStatus
 import org.apache.http.util.EntityUtils
 
-import jm.oauth.MessageSigner
 import jm.oauth.messagesigner._
-import jm.oauth.URLEncoder
 
 /**
  * Class for making signed requests after an access token has been received

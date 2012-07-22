@@ -12,9 +12,6 @@ import org.apache.http.util.EntityUtils
 import org.apache.http.HttpStatus
 
 import jm.oauth.messagesigner._
-import jm.oauth.MessageSigner
-import jm.oauth.URLEncoder
-
 
 object OAuth {
   val POST = "POST"
