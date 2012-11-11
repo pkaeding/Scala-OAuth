@@ -101,14 +101,19 @@ class Requester(val signatureMethod: String, val consumerSecret: String, val con
         
     //Map() converted to list of String with map() and then joined with & using reduceLeft
     //StringBuilder and foreach may be more appropriate
-    val queryString = getParams.map(p =>
-      java.net.URLEncoder.encode(p._1) + "=" + java.net.URLEncoder.encode(p._2))
-      .reduceLeft{(joined,p) => joined + "&" + p}
-    
+    val encodedParameters = getParams.map(p => java.net.URLEncoder.encode(p._1) + "=" + java.net.URLEncoder.encode(p._2))
+        
     val signer = MessageSigner.signatureFactory(this.signatureMethod)
     val signature = signer.createSignature(this.consumerSecret, this.oauthTokenSecret, OAuth.GET, url, parameters)
     
-    val request = new HttpGet(url + "?" + queryString)
+    val request = if(encodedParameters.isEmpty){
+    				new HttpGet(url)
+    			  }
+    			  else {
+    			  	val queryString = encodedParameters.reduceLeft{(joined,p) => joined + "&" + p}
+    			  	new HttpGet(url+"?"+queryString)
+    			  }
+    
     val realm = request.getURI().getScheme() + "://" + request.getURI().getHost() + "/"
     val authHeader = "OAuth realm=\"" + realm + "\"," +
     	"oauth_consumer_key=\"" + URLEncoder.encode(this.consumerKey) + "\"," +
@@ -135,9 +140,7 @@ class Requester(val signatureMethod: String, val consumerSecret: String, val con
    * @return Map[String, String]()
    */
   def encodeMapValues(toEncode: Map[String, String]): Map[String, String] = {
-    val encoded = toEncode.foldLeft(Map[String, String]()) {(encoding, current) => encoding + (current._1 -> URLEncoder.encode(current._2))}
-    
-    return encoded
+  	toEncode.foldLeft(Map[String, String]()) {(encoding, current) => encoding + (current._1 -> URLEncoder.encode(current._2))}
   }
   
 }
